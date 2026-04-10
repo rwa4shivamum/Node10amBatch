@@ -1,5 +1,6 @@
 import { Employee } from "../models/employeeModel.js";
 
+//
 export const createEmployee = async(req, res) => {
     try {
         const {name, age,email, department, salary} = req.body;
@@ -25,6 +26,8 @@ export const createEmployee = async(req, res) => {
         console.log(error.message)
     }
 }
+
+//
 export const bulkUploadEmployees = async(req, res) => {
     try {
         const employees = req.body;
@@ -50,6 +53,8 @@ export const bulkUploadEmployees = async(req, res) => {
         })
     }
 }
+
+//
 export const getAllEmployee = async(req, res) => {
     try {
         const {search, sortBy, order} = req.query;
@@ -89,9 +94,70 @@ export const getAllEmployee = async(req, res) => {
     }
 }
 //update
+export const updateEmployee = async(req, res) => {
+    try {
+        const {id} = req.params;
+        const {name , email, age, department, salary} = req.body
+        if(!name || !email || !age || !department || !salary){
+            return res.json({
+                status:false,
+                message:"All Fields are Required"
+            })
+        }
+        //Check if employee Exist 
+        const employee = await Employee.findById(id);
+        if(!employee){
+            return res.status(404).json({
+                status:false,
+                message:"Employee not Exist"
+            })
+        }
+        const updateEmployee = await Employee.findByIdAndUpdate(id, req.body, {new:true})
+
+        res.status(201).json({
+            status:true,
+            message:"Employee Got Updated",
+            data:updateEmployee
+        })
+    } catch (error) {
+        res.status(500).json({
+            status:false,
+            message:`Error in UpdateEmployee ${error.message}`
+        })
+    }
+}
+
+export const updateEmployeePartially = async (req, res) => {
+    try {
+        const {id} = req.params;
+
+         //Check if employee Exist 
+        const employee = await Employee.findById(id);
+        if(!employee){
+            return res.status(404).json({
+                status:false,
+                message:"Employee not Exist"
+            })
+        }
+        const updateEmployee = await Employee.findByIdAndUpdate(id, req.body, {new:true})
+
+        res.status(201).json({
+            status:true,
+            message:"Employee Got Updated",
+            data:updateEmployee
+        })
+    } catch (error) {
+        res.status(500).json({
+            status:false,
+            message:`Error in UpdateEmployee ${error.message}`
+        })
+    }
+}
 
 //delete
 
+
+// export const 
 /**
 $or:[
                     {name: {$regex: search , $options:"i"}},
