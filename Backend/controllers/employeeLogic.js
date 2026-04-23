@@ -121,6 +121,7 @@ export const getAllEmployee = async (req, res) => {
     });
   }
 };
+
 //updateEmployeeAll
 export const updateEmployee = async (req, res) => {
   try {
